@@ -1,0 +1,50 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+#데이터 불러오기
+def load_data(file_path):
+    df = pd.read_csv(file_path)
+    return df
+
+#데이터 전처리
+def preprocess_data(df):
+    #필요한 열을 선택 (year, team, batting_avg, onbase_perc, slugging_perc)
+    columns = ['year', 'team', 'batting_avg', 'onbase_perc', 'slugging_perc']
+    df = df[columns]
+    
+    #데이터 정렬 (팀 순, 년도별로 정렬)
+    df = df.sort_values(by=['year', 'team'])
+    return df
+
+#년도별 그래프 그리기 (x축: year, y축: metric, 선: team)
+def plot_metrics(df):
+    metrics = ['batting_avg', 'onbase_perc', 'slugging_perc']
+    
+    #각 지표에 대해 별도의 창에서 선그래프 그리기
+    for metric in metrics:
+        plt.figure(figsize=(10, 6))  
+        sns.lineplot(x='year', y=metric, data=df, hue='team', marker='o', palette='viridis')
+
+        #제목, 레이블블
+        plt.title(f'{metric.capitalize()} by Year (Teams)', fontsize=16)
+        plt.xlabel('Year', fontsize=12)
+        plt.ylabel(metric.capitalize(), fontsize=12)
+        
+        #그래프 출력
+        plt.show()
+
+#메인 함수
+def main():
+    #파일 경로 설정
+    file_path = 'C:/Users/tamam/Desktop/bigdata/kbo_dataset_2018_2024.csv'
+    #데이터 불러오기
+    df = load_data(file_path)
+    #데이터 전처리
+    df_processed = preprocess_data(df)
+    #년도별 선그래프 그리기
+    plot_metrics(df_processed)
+
+#실행
+if __name__ == "__main__":
+ main()
